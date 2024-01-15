@@ -1,0 +1,29 @@
+---
+- name: Ensure InfluxDB Docker data volume is present
+  community.docker.docker_volume:
+    name: influxdb_data
+
+- name: Ensure InfluxDB Docker config volume is present
+  community.docker.docker_volume:
+    name: influxdb_config
+
+- name: Ensure InfluxDB Docker container is running
+  community.docker.docker_container:
+    name: influxdb
+    image: influxdb:latest
+    ports:
+      - "8086:8086"
+      - "8089:8089/udp"
+    env:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: root
+      DOCKER_INFLUXDB_INIT_PASSWORD: "{{ influxdb_password }}"
+      DOCKER_INFLUXDB_INIT_ORG: homelab
+      DOCKER_INFLUXDB_INIT_BUCKET: proxmox
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: "{{ influxdb_secret }}"
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+      - influxdb_config:/etc/influxdb2
+    restart_policy: unless-stopped
+    networks:
+      - name: web-secure

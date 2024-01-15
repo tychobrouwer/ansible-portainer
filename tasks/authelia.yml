@@ -1,0 +1,62 @@
+---
+- name: Ensure authelia config is on remote
+  ansible.builtin.template:
+    src: ./templates/authelia-config.yaml.j2
+    dest: /root/authelia-config/configuration.yaml
+    mode: "0644"
+
+- name: Ensure authelia user database is on remote
+  ansible.builtin.template:
+    src: ./templates/authelia-user-database.yaml.j2
+    dest: /root/authelia-config/users_database.yaml
+    mode: "0644"
+
+- name: Ensure authelia jwt secret is on remote
+  copy:
+    dest: /root/authelia-config/authelia_jwt_secret.key
+    content: "{{ authelia_jwt_secret }}"
+    mode: "0600"
+
+- name: Ensure authelia session secret is on remote
+  copy:
+    dest: /root/authelia-config/authelia_session_secret.key
+    content: "{{ authelia_session_secret }}"
+    mode: "0600"
+
+- name: Ensure authelia storage secret is on remote
+  copy:
+    dest: /root/authelia-config/authelia_storage_secret.key
+    content: "{{ authelia_storage_secret }}"
+    mode: "0600"
+
+- name: Ensure authelia smtp password is on remote
+  copy:
+    dest: /root/authelia-config/smtp_password.password
+    content: "{{ smtp_password }}"
+    mode: "0600"
+
+- name: Ensure Authelia Docker container is running
+  community.docker.docker_container:
+    name: authelia
+    image: authelia/authelia:latest
+    volumes:
+      - /root/authelia-config:/config
+    command:
+      - "authelia"
+      - "--config=/config/configuration.yaml"
+    env:
+      AUTHELIA_JWT_SECRET_FILE: /config/authelia_jwt_secret.key
+      AUTHELIA_SESSION_SECRET_FILE: /config/authelia_session_secret.key
+      AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE: /config/authelia_storage_secret.key
+      AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE: /config/smtp_password.password
+    restart_policy: unless-stopped
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.authelia.rule: "Host(`authelia.{{ root_domain }}`)"
+      traefik.http.routers.authelia.entrypoints: "web-secure"
+      traefik.http.routers.authelia.tls: "true"
+      traefik.http.services.authelia.loadbalancer.server.port: "9091"
+    networks:
+      - name: web-secure
+    healthcheck:
+      test: ["NONE"]

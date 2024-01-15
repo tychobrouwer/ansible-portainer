@@ -1,0 +1,27 @@
+---
+- name: Ensure Portainer Docker volume is present
+  community.docker.docker_volume:
+    name: portainer_data
+
+- name: Ensure Portainer Docker container is running
+  community.docker.docker_container:
+    name: portainer
+    image: portainer/portainer-ce:linux-amd64
+    state: started
+    ports:
+      # - "8000:8000"
+      - "9000:9000"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.portainer.rule: "Host(`portainer.{{ root_domain }}`)"
+      traefik.http.routers.portainer.entrypoints: "web-secure"
+      traefik.http.routers.portainer.service: "portainer"
+      traefik.http.routers.portainer.tls: "true"
+      traefik.http.routers.portainer.middlewares: authelia@file
+      traefik.http.services.portainer.loadbalancer.server.port: "9000"
+    restart_policy: unless-stopped
+    networks:
+      - name: web-secure
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data

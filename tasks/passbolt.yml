@@ -1,0 +1,94 @@
+---
+- name: Ensure Passbolt database Docker volume is present
+  community.docker.docker_volume:
+    name: database_volume
+
+- name: Ensure Passbolt database Docker container is running
+  community.docker.docker_container:
+    name: mariadb-passbolt
+    image: mariadb:10.3
+    labels:
+      watchtower.enable: "false"
+    env:
+      MYSQL_ROOT_PASSWORD: "{{ mariadb_root_password }}"
+      MYSQL_DATABASE: "passbolt"
+      MYSQL_USER: "passbolt"
+      MYSQL_PASSWORD: "{{ mariadb_database_password }}"
+    volumes:
+      - database_volume:/var/lib/mysql
+    restart_policy: unless-stopped
+    ports:
+      - "3306:3306"
+
+- name: Ensure Passbolt gpg Docker volume is present
+  community.docker.docker_volume:
+    name: gpg_volume
+
+- name: Ensure Passbolt jwt Docker volume is present
+  community.docker.docker_volume:
+    name: jwt_volume
+
+- name: Ensure Passbolt Docker container is running
+  community.docker.docker_container:
+    name: passbolt
+    image: passbolt/passbolt:latest
+    command:
+      [
+        "/usr/bin/wait-for.sh",
+        "-t",
+        "0",
+        "192.168.1.103:3306",
+        "--",
+        "/docker-entrypoint.sh",
+      ]
+    env:
+      APP_FULL_BASE_URL: "https://passbolt.{{ root_domain }}"
+      DATASOURCES_DEFAULT_HOST: "192.168.1.103"
+      DATASOURCES_DEFAULT_PORT: "3306"
+      DATASOURCES_DEFAULT_DATABASE: "passbolt"
+      DATASOURCES_DEFAULT_USERNAME: "passbolt"
+      DATASOURCES_DEFAULT_PASSWORD: "{{ mariadb_database_password }}"
+      EMAIL_TRANSPORT_DEFAULT_HOST: "{{ smtp_host }}"
+      EMAIL_TRANSPORT_DEFAULT_PORT: "587"
+      EMAIL_TRANSPORT_DEFAULT_USERNAME: "{{ smtp_username }}"
+      EMAIL_TRANSPORT_DEFAULT_PASSWORD: "{{ smtp_password }}"
+      EMAIL_TRANSPORT_DEFAULT_TLS: "true"
+      PASSBOLT_META_DESCRIPTION: "{{ passbolt_description }}"
+      PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED: "true"
+    volumes:
+      - gpg_volume:/etc/passbolt/gpg
+      - jwt_volume:/etc/passbolt/jwt
+    restart_policy: unless-stopped
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.passbolt.rule: "Host(`passbolt.{{ root_domain }}`)"
+      traefik.http.routers.passbolt.entrypoints: "web-secure"
+      traefik.http.routers.passbolt.tls: "true"
+    ports:
+      - 4080:80
+
+    networks:
+      - name: web-secure
+
+- name: Ensure passbolt admin is present
+  community.docker.docker_container_exec:
+    container: passbolt
+    user: www-data
+    command: /usr/share/php/passbolt/bin/cake passbolt register_user -u {{ passbolt_email }} -f {{ passbolt_username }} -l {{ passbolt_surname }} -r admin
+  register: passbolt_result
+  changed_when: "'Username: The username is already in use' not in passbolt_result.stdout"
+  failed_when: false
+
+- name: Ensure gpg fingerprint is imported
+  community.docker.docker_container_exec:
+    container: passbolt
+    user: www-data
+    command: export PASSBOLT_GPG_SERVER_KEY_FINGERPRINT="$(gpg --home $GNUPGHOME --list-keys ${PASSBOLT_KEY_EMAIL:-passbolt@yourdomain.com} | grep -Ev "^(pub|sub|uid|^$)" | tr -d ' ')"
+  register: passbolt_result
+  changed_when: false
+  failed_when: false
+
+- name: Print result passbolt admin
+  ansible.builtin.debug:
+    msg: "{{ passbolt_result.stdout }}"
+  when: "'Username: The username is already in use' not in passbolt_result.stdout"

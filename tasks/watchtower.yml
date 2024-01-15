@@ -1,0 +1,10 @@
+---
+- name: Ensure Watchtower Docker container is running
+  community.docker.docker_container:
+    name: watchtower
+    image: containrrr/watchtower:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    env:
+      WATCHTOWER_CLEANUP: "true"
+    restart_policy: unless-stopped

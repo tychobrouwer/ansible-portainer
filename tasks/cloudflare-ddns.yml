@@ -1,0 +1,10 @@
+---
+- name: Ensure Cloudflare DDNS Docker container is running
+  community.docker.docker_container:
+    name: cloudflare-ddns
+    image: oznu/cloudflare-ddns:latest
+    env:
+      API_KEY: "{{ cloudflare_api_key }}"
+      ZONE: "{{ root_domain }}"
+      PROXIED: "true"
+    restart_policy: unless-stopped

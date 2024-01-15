@@ -1,0 +1,39 @@
+---
+log:
+  level: DEBUG
+
+api:
+  insecure: true
+  dashboard: true
+
+providers:
+  docker:
+    exposedbydefault: false
+    endpoint: unix:///var/run/docker.sock
+  file:
+    filename: /etc/traefik/dynamic.yaml
+    watch: true
+
+entryPoints:
+  web-secure:
+    address: :443
+    http:
+      tls:
+        options: default
+
+accessLog:
+  filePath: /root/access.log
+  format: json
+  fields:
+    headers:
+      defaultmode: keep
+      names:
+        x-request-id: keep
+
+metrics:
+  influxDB2:
+    address: http://192.168.1.103:8086
+    token: {{ influxdb_secret }}
+    org: homelab
+    bucket: traefik
+    pushInterval: 10s

@@ -1,2 +1,4 @@
 ---
 # vars file for ansible-portainer
+docker_ce_deb_repo: deb https://download.docker.com/linux/debian bookworm stable
+docker_ce_deb_gpg: https://download.docker.com/linux/debian/gpg

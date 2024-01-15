@@ -1,0 +1,24 @@
+---
+- name: Ensure dashy config is on remote
+  ansible.builtin.template:
+    src: ./templates/dashy-conf.yaml.j2
+    dest: /root/dashy-conf.yaml
+    mode: "0644"
+
+- name: Ensure Dashy Docker container is running
+  community.docker.docker_container:
+    name: dashy
+    image: tychobrouwer/dashy-tychobrouwer
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.dashy.rule: "Host(`dash.{{ root_domain }}`)"
+      traefik.http.routers.dashy.entrypoints: "web-secure"
+      traefik.http.routers.dashy.tls: "true"
+    state: started
+    # ports:
+    #   - "90:80"
+    networks:
+      - name: web-secure
+    volumes:
+      - /root/dashy-conf.yaml:/app/public/conf.yml
+    restart_policy: unless-stopped

@@ -1,0 +1,221 @@
+---
+tls:
+  stores:
+    default:
+      defaultCertificate:
+        certFile: /root/{{ root_domain_name }}-cloudflare-origin.cert
+        keyFile: /root/{{ root_domain_name }}-cloudflare-origin.key
+
+http:
+  serversTransports:
+    pve:
+      rootCAs:
+        - /root/cert-proxmox.crt
+
+    pve-backup:
+      insecureSkipVerify: true
+
+  routers:
+    pve:
+      entryPoints:
+        - web-secure
+      rule: "Host (`pve.{{ root_domain }}`)"
+      middlewares:
+        - authelia
+      service: pve
+      tls: {}
+
+    pihole:
+      entryPoints:
+        - web-secure
+      rule: "PathPrefix(`/admin`) && Host (`pihole.{{ root_domain }}`)"
+      middlewares:
+        - authelia
+      service: pihole
+      tls: {}
+
+    pihole_path:
+      entryPoints:
+        - web-secure
+      rule: "Host (`pihole.{{ root_domain }}`)"
+      middlewares:
+        - authelia
+        - addprefix-pihole
+      service: pihole
+      tls: {}
+
+    wireguard:
+      entryPoints:
+        - web-secure
+      rule: "Host (`wireguard.{{ root_domain }}`)"
+      middlewares:
+        - authelia
+      service: wireguard
+      tls: {}
+
+    torrent:
+      entryPoints:
+        - web-secure
+      rule: "Host(`torrent.{{ root_domain }}`)"
+      middlewares:
+        - authelia
+      service: torrent
+      tls: {}
+
+    www-website:
+      entryPoints:
+        - web-secure
+      rule: "Host(`www.{{ root_domain }}`)"
+      service: website
+      tls: {}
+
+    website:
+      entryPoints:
+        - web-secure
+      rule: "Host(`{{ root_domain }}`)"
+      middlewares:
+        - "www-redirect"
+      service: website
+      tls: {}
+
+    prowlarr:
+      entryPoints:
+        - web-secure
+      rule: "Host(`prowlarr.{{ root_domain }}`)"
+      middlewares:
+        - authelia
+      service: prowlarr
+      tls: {}
+
+    radarr:
+      entryPoints:
+        - web-secure
+      rule: "Host(`radarr.{{ root_domain }}`)"
+      middlewares:
+        - authelia
+      service: radarr
+      tls: {}
+
+    sonarr:
+      entryPoints:
+        - web-secure
+      rule: "Host(`sonarr.{{ root_domain }}`)"
+      middlewares:
+        - authelia
+      service: sonarr
+      tls: {}
+
+    pve-backup:
+      entryPoints:
+        - web-secure
+      rule: "Host (`pve-backup.{{ root_domain }}`)"
+      middlewares:
+        - authelia
+      service: pve-backup
+      tls: {}
+
+    gitea:
+      entryPoints:
+        - web-secure
+      rule: "Host(`gitea.{{ root_domain }}`)"
+      middlewares:
+        - authelia
+      service: gitea
+      tls: {}
+
+    librephotos:
+      entryPoints:
+        - web-secure
+      rule: "Host(`librephotos.{{ root_domain }}`)"
+      middlewares:
+        - authelia
+      service: librephotos
+      tls: {}
+
+    jellyfin:
+      entryPoints:
+        - web-secure
+      rule: "Host(`jellyfin.{{ root_domain }}`)"
+      middlewares:
+        - authelia
+      service: jellyfin
+      tls: {}
+
+  services:
+    pve:
+      loadBalancer:
+        serversTransport: "pve"
+        servers:
+          - url: "https://192.168.1.100:8006/"
+
+    pihole:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.101:80/"
+
+    wireguard:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.102:10086/"
+
+    torrent:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.105:8080/"
+
+    website:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.106:80/"
+
+    prowlarr:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.107:9696/"
+
+    radarr:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.107:7878/"
+
+    sonarr:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.107:8989/"
+
+    pve-backup:
+      loadBalancer:
+        serversTransport: "pve-backup"
+        servers:
+          - url: "https://192.168.1.108:8007/"
+
+    gitea:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.109:3000/"
+
+    librephotos:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.110:80/"
+
+    jellyfin:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.111:8096/"
+
+  middlewares:
+    addprefix-pihole:
+      addPrefix:
+        prefix: "/admin"
+
+    www-redirect:
+      redirectRegex:
+        regex: "https://{{ root_domain }}/*"
+        replacement: "https://www.{{ root_domain }}/*"
+
+    authelia:
+      forwardAuth:
+        address: http://authelia:9091/api/verify?rd=https%3A%2F%2Fauthelia.{{ root_domain }}%2F
+        trustForwardHeader: true
+        authResponseHeaders: Remote-User,Remote-Groups,Remote-Name,Remote-Email

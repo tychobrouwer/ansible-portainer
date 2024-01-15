@@ -1,0 +1,11 @@
+---
+# To create a hashed password you can run the following command:
+# `docker run authelia/authelia:latest authelia hash-password YOUR_PASSWORD``
+users:
+  {{ authelia_user_name }}:
+    displayname: {{ authelia_user_display }}
+    password: "{{ authelia_user_pass }}"
+    email: {{ authelia_user_email }}
+    groups:
+      - admins
+      - dev
