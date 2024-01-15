@@ -21,6 +21,10 @@ portainer_authelia:
 
 portainer_cloudflare_api_key: ""
 
+portainer_grafana:
+  admin_user: "admin"
+  admin_password: ""
+
 portainer_influxdb:
   password: ""
   secret: ""

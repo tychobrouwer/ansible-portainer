@@ -12,6 +12,14 @@
 #     owner: 472
 #     force: false
 
+- name: Ensure Grafana configuration file is present
+  ansible.builtin.template:
+    src: grafana.ini.j2
+    dest: /root/grafana.ini
+    mode: "0644"
+    owner: root
+    group: root
+
 - name: Ensure Grafana Docker container is running
   community.docker.docker_container:
     name: grafana
