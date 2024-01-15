@@ -3,8 +3,8 @@ tls:
   stores:
     default:
       defaultCertificate:
-        certFile: /root/{{ root_domain_name }}-cloudflare-origin.cert
-        keyFile: /root/{{ root_domain_name }}-cloudflare-origin.key
+        certFile: /root/tbrouwer-cloudflare-origin.cert
+        keyFile: /root/tbrouwer-cloudflare-origin.key
 
 http:
   serversTransports:
@@ -19,7 +19,7 @@ http:
     pve:
       entryPoints:
         - web-secure
-      rule: "Host (`pve.{{ root_domain }}`)"
+      rule: "Host (`pve.{{ portainer_root_domain }}`)"
       middlewares:
         - authelia
       service: pve
@@ -28,7 +28,7 @@ http:
     pihole:
       entryPoints:
         - web-secure
-      rule: "PathPrefix(`/admin`) && Host (`pihole.{{ root_domain }}`)"
+      rule: "PathPrefix(`/admin`) && Host (`pihole.{{ portainer_root_domain }}`)"
       middlewares:
         - authelia
       service: pihole
@@ -37,7 +37,7 @@ http:
     pihole_path:
       entryPoints:
         - web-secure
-      rule: "Host (`pihole.{{ root_domain }}`)"
+      rule: "Host (`pihole.{{ portainer_root_domain }}`)"
       middlewares:
         - authelia
         - addprefix-pihole
@@ -47,7 +47,7 @@ http:
     wireguard:
       entryPoints:
         - web-secure
-      rule: "Host (`wireguard.{{ root_domain }}`)"
+      rule: "Host (`wireguard.{{ portainer_root_domain }}`)"
       middlewares:
         - authelia
       service: wireguard
@@ -56,7 +56,7 @@ http:
     torrent:
       entryPoints:
         - web-secure
-      rule: "Host(`torrent.{{ root_domain }}`)"
+      rule: "Host(`torrent.{{ portainer_root_domain }}`)"
       middlewares:
         - authelia
       service: torrent
@@ -65,14 +65,14 @@ http:
     www-website:
       entryPoints:
         - web-secure
-      rule: "Host(`www.{{ root_domain }}`)"
+      rule: "Host(`www.{{ portainer_root_domain }}`)"
       service: website
       tls: {}
 
     website:
       entryPoints:
         - web-secure
-      rule: "Host(`{{ root_domain }}`)"
+      rule: "Host(`{{ portainer_root_domain }}`)"
       middlewares:
         - "www-redirect"
       service: website
@@ -81,7 +81,7 @@ http:
     prowlarr:
       entryPoints:
         - web-secure
-      rule: "Host(`prowlarr.{{ root_domain }}`)"
+      rule: "Host(`prowlarr.{{ portainer_root_domain }}`)"
       middlewares:
         - authelia
       service: prowlarr
@@ -90,7 +90,7 @@ http:
     radarr:
       entryPoints:
         - web-secure
-      rule: "Host(`radarr.{{ root_domain }}`)"
+      rule: "Host(`radarr.{{ portainer_root_domain }}`)"
       middlewares:
         - authelia
       service: radarr
@@ -99,7 +99,7 @@ http:
     sonarr:
       entryPoints:
         - web-secure
-      rule: "Host(`sonarr.{{ root_domain }}`)"
+      rule: "Host(`sonarr.{{ portainer_root_domain }}`)"
       middlewares:
         - authelia
       service: sonarr
@@ -108,7 +108,7 @@ http:
     pve-backup:
       entryPoints:
         - web-secure
-      rule: "Host (`pve-backup.{{ root_domain }}`)"
+      rule: "Host (`pve-backup.{{ portainer_root_domain }}`)"
       middlewares:
         - authelia
       service: pve-backup
@@ -117,7 +117,7 @@ http:
     gitea:
       entryPoints:
         - web-secure
-      rule: "Host(`gitea.{{ root_domain }}`)"
+      rule: "Host(`gitea.{{ portainer_root_domain }}`)"
       middlewares:
         - authelia
       service: gitea
@@ -126,7 +126,7 @@ http:
     librephotos:
       entryPoints:
         - web-secure
-      rule: "Host(`librephotos.{{ root_domain }}`)"
+      rule: "Host(`librephotos.{{ portainer_root_domain }}`)"
       middlewares:
         - authelia
       service: librephotos
@@ -135,7 +135,7 @@ http:
     jellyfin:
       entryPoints:
         - web-secure
-      rule: "Host(`jellyfin.{{ root_domain }}`)"
+      rule: "Host(`jellyfin.{{ portainer_root_domain }}`)"
       middlewares:
         - authelia
       service: jellyfin
@@ -211,11 +211,11 @@ http:
 
     www-redirect:
       redirectRegex:
-        regex: "https://{{ root_domain }}/*"
-        replacement: "https://www.{{ root_domain }}/*"
+        regex: "https://{{ portainer_root_domain }}/*"
+        replacement: "https://www.{{ portainer_root_domain }}/*"
 
     authelia:
       forwardAuth:
-        address: http://authelia:9091/api/verify?rd=https%3A%2F%2Fauthelia.{{ root_domain }}%2F
+        address: http://authelia:9091/api/verify?rd=https%3A%2F%2Fauthelia.{{ portainer_root_domain }}%2F
         trustForwardHeader: true
         authResponseHeaders: Remote-User,Remote-Groups,Remote-Name,Remote-Email

@@ -6,7 +6,7 @@ server:
 log:
   level: debug
 
-default_redirection_url: https://authelia.{{ root_domain }}
+default_redirection_url: https://authelia.{{ portainer_root_domain }}
 theme: dark
 default_2fa_method: totp
 
@@ -34,17 +34,17 @@ totp:
 access_control:
   default_policy: one_factor
   rules:
-    - domain: "jellyfin.{{ root_domain }}"
+    - domain: "jellyfin.{{ portainer_root_domain }}"
       policy: bypass
 
-    - domain: "*.{{ root_domain }}" 
+    - domain: "*.{{ portainer_root_domain }}" 
       policy: two_factor
 
 session:
   name: authelia_session
   expiration: 3600
   inactivity: 300
-  domain: {{ root_domain }}
+  domain: {{ portainer_root_domain }}
 
 regulation:
   max_retries: 3
@@ -57,7 +57,7 @@ storage:
 
 notifier:
   smtp:
-    username: {{ smtp_username }}
-    host: {{ smtp_host }}
+    username: {{ portainer_notifications.smtp_username }}
+    host: {{ portainer_notifications.smtp_host }}
     port: 587
-    sender: {{ authelia_email }}
+    sender: {{ portainer_notifications.smtp_username }}

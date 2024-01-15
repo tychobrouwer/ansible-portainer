@@ -10,10 +10,10 @@
     labels:
       watchtower.enable: "false"
     env:
-      MYSQL_ROOT_PASSWORD: "{{ mariadb_root_password }}"
+      MYSQL_ROOT_PASSWORD: "{{ portainer_passbolt.mariadb_root_password }}"
       MYSQL_DATABASE: "passbolt"
       MYSQL_USER: "passbolt"
-      MYSQL_PASSWORD: "{{ mariadb_database_password }}"
+      MYSQL_PASSWORD: "{{ portainer_passbolt.mariadb_database_password }}"
     volumes:
       - database_volume:/var/lib/mysql
     restart_policy: unless-stopped
@@ -42,18 +42,18 @@
         "/docker-entrypoint.sh",
       ]
     env:
-      APP_FULL_BASE_URL: "https://passbolt.{{ root_domain }}"
+      APP_FULL_BASE_URL: "https://passbolt.{{ portainer_root_domain }}"
       DATASOURCES_DEFAULT_HOST: "192.168.1.103"
       DATASOURCES_DEFAULT_PORT: "3306"
       DATASOURCES_DEFAULT_DATABASE: "passbolt"
       DATASOURCES_DEFAULT_USERNAME: "passbolt"
-      DATASOURCES_DEFAULT_PASSWORD: "{{ mariadb_database_password }}"
-      EMAIL_TRANSPORT_DEFAULT_HOST: "{{ smtp_host }}"
+      DATASOURCES_DEFAULT_PASSWORD: "{{ portainer_passbolt.mariadb_database_password }}"
+      EMAIL_TRANSPORT_DEFAULT_HOST: "{{ portainer_notifications.smtp_host }}"
       EMAIL_TRANSPORT_DEFAULT_PORT: "587"
-      EMAIL_TRANSPORT_DEFAULT_USERNAME: "{{ smtp_username }}"
-      EMAIL_TRANSPORT_DEFAULT_PASSWORD: "{{ smtp_password }}"
+      EMAIL_TRANSPORT_DEFAULT_USERNAME: "{{ portainer_notifications.smtp_username }}"
+      EMAIL_TRANSPORT_DEFAULT_PASSWORD: "{{ portainer_notifications.smtp_password }}"
       EMAIL_TRANSPORT_DEFAULT_TLS: "true"
-      PASSBOLT_META_DESCRIPTION: "{{ passbolt_description }}"
+      PASSBOLT_META_DESCRIPTION: "{{ portainer_passbolt.description }}"
       PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED: "true"
     volumes:
       - gpg_volume:/etc/passbolt/gpg
@@ -61,7 +61,7 @@
     restart_policy: unless-stopped
     labels:
       traefik.enable: "true"
-      traefik.http.routers.passbolt.rule: "Host(`passbolt.{{ root_domain }}`)"
+      traefik.http.routers.passbolt.rule: "Host(`passbolt.{{ portainer_root_domain }}`)"
       traefik.http.routers.passbolt.entrypoints: "web-secure"
       traefik.http.routers.passbolt.tls: "true"
     ports:
@@ -74,7 +74,7 @@
   community.docker.docker_container_exec:
     container: passbolt
     user: www-data
-    command: /usr/share/php/passbolt/bin/cake passbolt register_user -u {{ passbolt_email }} -f {{ passbolt_username }} -l {{ passbolt_surname }} -r admin
+    command: /usr/share/php/passbolt/bin/cake passbolt register_user -u {{ portainer_passbolt.user_email }} -f {{ portainer_passbolt.user_name }} -l {{ portainer_passbolt.user_surname }} -r admin
   register: passbolt_result
   changed_when: "'Username: The username is already in use' not in passbolt_result.stdout"
   failed_when: false
@@ -83,7 +83,7 @@
   community.docker.docker_container_exec:
     container: passbolt
     user: www-data
-    command: export PASSBOLT_GPG_SERVER_KEY_FINGERPRINT="$(gpg --home $GNUPGHOME --list-keys ${PASSBOLT_KEY_EMAIL:-passbolt@yourdomain.com} | grep -Ev "^(pub|sub|uid|^$)" | tr -d ' ')"
+    command: export PASSBOLT_GPG_SERVER_KEY_FINGERPRINT="$(gpg --home $GNUPGHOME --list-keys ${PASSBOLT_KEY_EMAIL:-passbolt@{{ portainer_root_domain }}} | grep -Ev "^(pub|sub|uid|^$)" | tr -d ' ')"
   register: passbolt_result
   changed_when: false
   failed_when: false

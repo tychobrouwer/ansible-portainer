@@ -1,7 +1,7 @@
 ---
 - name: Ensure dashy config is on remote
   ansible.builtin.template:
-    src: ./templates/dashy-conf.yaml.j2
+    src: dashy-conf.yaml.j2
     dest: /root/dashy-conf.yaml
     mode: "0644"
 
@@ -11,7 +11,7 @@
     image: tychobrouwer/dashy-tychobrouwer
     labels:
       traefik.enable: "true"
-      traefik.http.routers.dashy.rule: "Host(`dash.{{ root_domain }}`)"
+      traefik.http.routers.dashy.rule: "Host(`dash.{{ portainer_root_domain }}`)"
       traefik.http.routers.dashy.entrypoints: "web-secure"
       traefik.http.routers.dashy.tls: "true"
     state: started

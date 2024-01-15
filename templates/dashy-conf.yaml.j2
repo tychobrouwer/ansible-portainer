@@ -2,7 +2,7 @@
 # Page meta info, like heading, footer text and nav links
 pageInfo:
   title: Dashboard
-  description: {{ dashy_description }}
+  description: {{ portainer_dashy.description }}
 
 # Optional app settings and configuration
 appConfig:
@@ -69,74 +69,74 @@ sections:
     items:
       - title: Proxmox VE
         icon: hl-proxmox
-        url: "https://pve.{{ root_domain }}/#v1:0:=node%2Fpve:4:5::::::"
+        url: "https://pve.{{ portainer_root_domain }}/#v1:0:=node%2Fpve:4:5::::::"
         statusCheck: true
         statusCheckUrl: https://192.168.1.100:8006
         statusCheckAllowInsecure: true
 
       - title: Passbolt
         icon: https://avatars.githubusercontent.com/u/4386228?s=200&v=4
-        url: https://passbolt.{{ root_domain }}
+        url: https://passbolt.{{ portainer_root_domain }}
         statusCheck: true
         statusCheckUrl: http://192.168.1.103:4080
         statusCheckAcceptCodes: "401"
 
       - title: Portfolio
-        url: https://www.{{ root_domain }}/
+        url: https://www.{{ portainer_root_domain }}/
         icon: fas fa-globe
         statusCheck: true
 
       - title: Grafana
         icon: hl-grafana
-        url: https://grafana.{{ root_domain }}/
+        url: https://grafana.{{ portainer_root_domain }}/
         statusCheck: true
         statusCheckUrl: http://192.168.1.103:3000
 
       - title: Pi-Hole
         icon: hl-pi-hole-unbound
-        url: https://pihole.{{ root_domain }}/
+        url: https://pihole.{{ portainer_root_domain }}/
         statusCheck: true
         statusCheckUrl: http://192.168.1.101:80
         statusCheckAcceptCodes: "403"
 
       - title: Wireguard
         icon: hl-wireguard
-        url: https://wireguard.{{ root_domain }}/
+        url: https://wireguard.{{ portainer_root_domain }}/
         statusCheck: true
         statusCheckUrl: http://192.168.1.102:10086
 
       - title: Portainer
         icon: hl-portainer
-        url: https://portainer.{{ root_domain }}/#!/2/docker/containers
+        url: https://portainer.{{ portainer_root_domain }}/#!/2/docker/containers
         statusCheck: true
         statusCheckUrl: http://192.168.1.103:9000
 
       - title: LibrePhotos
         icon: hl-librephotos
-        url: https://librephotos.{{ root_domain }}/
+        url: https://librephotos.{{ portainer_root_domain }}/
         statusCheck: true
         statusCheckUrl: http://192.168.1.110:80
 
       - title: Sonarr
-        url: https://sonarr.{{ root_domain }}/
+        url: https://sonarr.{{ portainer_root_domain }}/
         icon: hl-sonarr
         statusCheck: true
         statusCheckUrl: http://192.168.1.107:8989
 
       - title: Radarr
-        url: https://radarr.{{ root_domain }}/
+        url: https://radarr.{{ portainer_root_domain }}/
         icon: hl-radarr
         statusCheck: true
         statusCheckUrl: http://192.168.1.107:7878
 
       - title: Prowlarr
-        url: https://prowlarr.{{ root_domain }}/
+        url: https://prowlarr.{{ portainer_root_domain }}/
         icon: hl-prowlarr
         statusCheck: true
         statusCheckUrl: http://192.168.1.107:9696
 
       - title: qBittorrent
-        url: https://torrent.{{ root_domain }}/
+        url: https://torrent.{{ portainer_root_domain }}/
         icon: hl-qbittorrent
         statusCheck: true
         statusCheckUrl: http://192.168.1.105:8080
@@ -155,7 +155,7 @@ sections:
 
       - title: Proxmox Backup
         icon: hl-proxmox
-        url: https://pve-backup.{{ root_domain }}/
+        url: https://pve-backup.{{ portainer_root_domain }}/
         statusCheck: true
         statusCheckUrl: https://192.168.1.108:8007
         statusCheckAllowInsecure: true

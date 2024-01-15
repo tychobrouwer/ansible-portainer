@@ -33,7 +33,7 @@ accessLog:
 metrics:
   influxDB2:
     address: http://192.168.1.103:8086
-    token: {{ influxdb_secret }}
+    token: {{ portainer_influxdb.secret }}
     org: homelab
     bucket: traefik
     pushInterval: 10s

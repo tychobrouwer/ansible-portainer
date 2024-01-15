@@ -13,7 +13,7 @@
       - "9000:9000"
     labels:
       traefik.enable: "true"
-      traefik.http.routers.portainer.rule: "Host(`portainer.{{ root_domain }}`)"
+      traefik.http.routers.portainer.rule: "Host(`portainer.{{ portainer_root_domain }}`)"
       traefik.http.routers.portainer.entrypoints: "web-secure"
       traefik.http.routers.portainer.service: "portainer"
       traefik.http.routers.portainer.tls: "true"

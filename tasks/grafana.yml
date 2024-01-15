@@ -4,13 +4,13 @@
     name: grafana_data
 
 # scp root@192.168.1.103:/var/lib/docker/volumes/grafana_data/_data/grafana.db .\Desktop\
-- name: Ensure Grafana database are present on remote
-  ansible.builtin.copy:
-    src: ./config/grafana.db
-    dest: /var/lib/docker/volumes/grafana_data/_data/grafana.db
-    mode: "0660"
-    owner: 472
-    force: false
+# - name: Ensure Grafana database are present on remote
+#   ansible.builtin.copy:
+#     src: grafana.db
+#     dest: /var/lib/docker/volumes/grafana_data/_data/grafana.db
+#     mode: "0660"
+#     owner: 472
+#     force: false
 
 - name: Ensure Grafana Docker container is running
   community.docker.docker_container:
@@ -20,7 +20,7 @@
       - "3000:3000"
     labels:
       traefik.enable: "true"
-      traefik.http.routers.grafana.rule: "Host(`grafana.{{ root_domain }}`)"
+      traefik.http.routers.grafana.rule: "Host(`grafana.{{ portainer_root_domain }}`)"
       traefik.http.routers.grafana.entrypoints: "web-secure"
       traefik.http.routers.grafana.tls: "true"
       traefik.http.routers.grafana.middlewares: authelia@file
