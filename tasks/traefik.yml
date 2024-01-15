@@ -12,7 +12,7 @@
     mode: "0644"
 
 - name: Ensure additional certificates are on remote
-  copy:
+  ansible.builtin.copy:
     dest: /root/{{ item.file }}
     content: "{{ item.cert }}"
     mode: "0600"
@@ -37,7 +37,7 @@
 #     mode: "0600"
 
 - name: Ensure web network for Traefik is present
-  docker_network:
+  community.docker.docker_network:
     name: web-secure
     internal: false
     state: present
@@ -53,8 +53,8 @@
     command:
       - --configFile=/etc/traefik/static.yaml
     ports:
-      - "443:443"
-      - "8080:8080"
+      - 443:443
+      - 8080:8080
     restart_policy: unless-stopped
     networks:
       - name: web-secure

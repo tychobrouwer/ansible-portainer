@@ -12,8 +12,8 @@
     name: influxdb
     image: influxdb:latest
     ports:
-      - "8086:8086"
-      - "8089:8089/udp"
+      - 8086:8086
+      - 8089:8089/udp
     env:
       DOCKER_INFLUXDB_INIT_MODE: setup
       DOCKER_INFLUXDB_INIT_USERNAME: root
