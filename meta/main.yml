@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  role_name: ansible_portainer
+  role_name: portainer
   namespace: tychobrouwer
   author: Tycho Brouwer
   description: Install and configure Portainer
