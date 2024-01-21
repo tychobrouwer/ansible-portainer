@@ -14,12 +14,6 @@
       - gnupg
     state: present
 
-- name: Ensure config files are present on remote
-  ansible.builtin.copy:
-    src: ./config/
-    dest: /root
-    mode: "0644"
-
 - name: Install Docker
   ansible.builtin.include_tasks: docker.yml
 

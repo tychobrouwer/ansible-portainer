@@ -4,7 +4,7 @@
 users:
   {{ portainer_authelia.user_name }}:
     displayname: {{ portainer_authelia.display_name }}
-    password: "{{ portainer_authelia.user_password }}"
+    password: "{{ portainer_authelia.user_password_hash }}"
     email: {{ portainer_authelia.user_email }}
     groups:
       - admins

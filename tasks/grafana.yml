@@ -3,15 +3,6 @@
   community.docker.docker_volume:
     name: grafana_data
 
-# scp root@192.168.1.103:/var/lib/docker/volumes/grafana_data/_data/grafana.db .\Desktop\
-# - name: Ensure Grafana database are present on remote
-#   ansible.builtin.copy:
-#     src: grafana.db
-#     dest: /var/lib/docker/volumes/grafana_data/_data/grafana.db
-#     mode: "0660"
-#     owner: 472
-#     force: false
-
 - name: Ensure Grafana configuration file is present
   ansible.builtin.template:
     src: grafana.ini.j2

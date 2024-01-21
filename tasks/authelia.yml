@@ -1,39 +1,74 @@
 ---
-- name: Ensure authelia config is on remote
-  ansible.builtin.template:
-    src: authelia-config.yaml.j2
-    dest: /root/authelia-config/configuration.yaml
-    mode: "0644"
+- name: Generate password hash
+  ansible.builtin.command: >
+    docker run authelia/authelia:latest
+    authelia crypto hash generate argon2 --password '{{ portainer_authelia.user_password }}'
+  register: password_hash
+
+- name: Set password hash
+  ansible.builtin.set_fact:
+    portainer_authelia.user_password_hash: "{{ password_hash.stdout | regex_replace('Digest: ', '') }}"
 
 - name: Ensure authelia user database is on remote
   ansible.builtin.template:
     src: authelia-user-database.yaml.j2
     dest: /root/authelia-config/users_database.yaml
-    mode: "0644"
-
-- name: Ensure authelia jwt secret is on remote
-  ansible.builtin.copy:
-    dest: /root/authelia-config/authelia_jwt_secret.key
-    content: "{{ portainer_authelia.jwt_secret }}"
     mode: "0600"
+    owner: root
+    group: root
 
-- name: Ensure authelia session secret is on remote
-  ansible.builtin.copy:
-    dest: /root/authelia-config/authelia_session_secret.key
-    content: "{{ portainer_authelia.session_secret }}"
+- name: Create files on remote
+  ansible.buildin.copy:
+    dest: "/root/authelia-config/{{ item.file }}"
+    content: "{{ item.content }}"
     mode: "0600"
+    owner: root
+    group: root
+  with_items:
+    - { file: authelia_jwt_secret.key,     content: "{{ portainer_authelia.jwt_secret }}" }
+    - { file: authelia_session_secret.key, content: "{{ portainer_authelia.session_secret }}" }
+    - { file: authelia_storage_secret.key, content: "{{ portainer_authelia.storage_secret }}" }
+    - { file: smtp_password.password,      content: "{{ portainer_notifications.smtp_password }}" }
 
-- name: Ensure authelia storage secret is on remote
-  ansible.builtin.copy:
-    dest: /root/authelia-config/authelia_storage_secret.key
-    content: "{{ portainer_authelia.storage_secret }}"
-    mode: "0600"
+# - name: Ensure authelia config is on remote
+#   ansible.builtin.template:
+#     src: authelia-config.yaml.j2
+#     dest: /root/authelia-config/configuration.yaml
+#     mode: "0644"
+#     owner: root
+#     group: root
 
-- name: Ensure authelia smtp password is on remote
-  ansible.builtin.copy:
-    dest: /root/authelia-config/smtp_password.password
-    content: "{{ portainer_notifications.smtp_password }}"
-    mode: "0600"
+# - name: Ensure authelia jwt secret is on remote
+#   ansible.builtin.copy:
+#     dest: /root/authelia-config/authelia_jwt_secret.key
+#     content: "{{ portainer_authelia.jwt_secret }}"
+#     mode: "0600"
+#     owner: root
+#     group: root
+
+# - name: Ensure authelia session secret is on remote
+#   ansible.builtin.copy:
+#     dest: /root/authelia-config/authelia_session_secret.key
+#     content: "{{ portainer_authelia.session_secret }}"
+#     mode: "0600"
+#     owner: root
+#     group: root
+
+# - name: Ensure authelia storage secret is on remote
+#   ansible.builtin.copy:
+#     dest: /root/authelia-config/authelia_storage_secret.key
+#     content: "{{ portainer_authelia.storage_secret }}"
+#     mode: "0600"
+#     owner: root
+#     group: root
+
+# - name: Ensure authelia smtp password is on remote
+#   ansible.builtin.copy:
+#     dest: /root/authelia-config/smtp_password.password
+#     content: "{{ portainer_notifications.smtp_password }}"
+#     mode: "0600"
+#     owner: root
+#     group: root
 
 - name: Ensure Authelia Docker container is running
   community.docker.docker_container:

@@ -32,10 +32,10 @@
   community.docker.docker_container:
     name: passbolt
     image: passbolt/passbolt:latest
-    command: [/usr/bin/wait-for.sh, -t, "0", 192.168.1.103:3306, --, /docker-entrypoint.sh]
+    command: [/usr/bin/wait-for.sh, -t, "0", "{{ ansible_default_ipv4.address|default(ansible_all_ipv4_addresses[0]) }}:3306", --, /docker-entrypoint.sh]
     env:
       APP_FULL_BASE_URL: https://passbolt.{{ portainer_root_domain }}
-      DATASOURCES_DEFAULT_HOST: 192.168.1.103
+      DATASOURCES_DEFAULT_HOST: "{{ ansible_default_ipv4.address|default(ansible_all_ipv4_addresses[0]) }}"
       DATASOURCES_DEFAULT_PORT: "3306"
       DATASOURCES_DEFAULT_DATABASE: passbolt
       DATASOURCES_DEFAULT_USERNAME: passbolt

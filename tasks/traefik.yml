@@ -3,19 +3,25 @@
   ansible.builtin.template:
     src: traefik-static.yaml.j2
     dest: /root/traefik-static.yaml
-    mode: "0644"
+    mode: "0600"
+    owner: root
+    group: root
 
-- name: Ensure traefik dynamic config is on remote
-  ansible.builtin.template:
-    src: traefik-dynamic.yaml.j2
-    dest: /root/traefik-dynamic.yaml
-    mode: "0644"
+# - name: Ensure traefik dynamic config is on remote
+#   ansible.builtin.template:
+#     src: traefik-dynamic.yaml.j2
+#     dest: /root/traefik-dynamic.yaml
+#     mode: "0600"
+#     owner: root
+#     group: root
 
 - name: Ensure additional certificates are on remote
   ansible.builtin.copy:
     dest: /root/{{ item.file }}
     content: "{{ item.cert }}"
     mode: "0600"
+    owner: root
+    group: root
   with_items: "{{ portainer_traefik.additional_certs }}"
 
 # - name: Ensure proxmox certificate is on remote
