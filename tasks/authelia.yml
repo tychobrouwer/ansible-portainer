@@ -8,6 +8,7 @@
 - name: Set password hash
   ansible.builtin.set_fact:
     portainer_authelia.user_password_hash: "{{ password_hash.stdout | regex_replace('Digest: ', '') }}"
+  changed_when: false
 
 - name: Ensure authelia user database is on remote
   ansible.builtin.template:
@@ -25,10 +26,10 @@
     owner: root
     group: root
   with_items:
-    - { file: authelia_jwt_secret.key,     content: "{{ portainer_authelia.jwt_secret }}" }
+    - { file: authelia_jwt_secret.key, content: "{{ portainer_authelia.jwt_secret }}" }
     - { file: authelia_session_secret.key, content: "{{ portainer_authelia.session_secret }}" }
     - { file: authelia_storage_secret.key, content: "{{ portainer_authelia.storage_secret }}" }
-    - { file: smtp_password.password,      content: "{{ portainer_notifications.smtp_password }}" }
+    - { file: smtp_password.password, content: "{{ portainer_notifications.smtp_password }}" }
 
 # - name: Ensure authelia config is on remote
 #   ansible.builtin.template:

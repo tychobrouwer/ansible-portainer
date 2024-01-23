@@ -16,7 +16,7 @@
     group: root
   with_items:
     - { src: "{{ portainer_authelia_config_template_path }}", dest: /root/authelia-config/configuration.yaml }
-    - { src: "{{ portainer_dashy_config_template_path }}",      dest: /root/dashy-conf.yaml }
+    - { src: "{{ portainer_dashy_config_template_path }}", dest: /root/dashy-conf.yaml }
     - { src: "{{ portainer_traefik_dynamic_template_path }}", dest: /root/traefik-dynamic.yaml }
 
 # - name: Ensure traefik dynamic config is on remote
