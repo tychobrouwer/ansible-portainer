@@ -4,11 +4,12 @@
     docker run authelia/authelia:latest
     authelia crypto hash generate argon2 --password '{{ portainer_authelia.user_password }}'
   register: password_hash
+  changed_when: false
 
 - name: Set password hash
   ansible.builtin.set_fact:
-    portainer_authelia.user_password_hash: "{{ password_hash.stdout | regex_replace('Digest: ', '') }}"
-  changed_when: false
+    portainer_authelia:
+      user_password_hash: "{{ password_hash.stdout | regex_replace('Digest: ', '') }}"
 
 - name: Ensure authelia user database is on remote
   ansible.builtin.template:
@@ -19,7 +20,7 @@
     group: root
 
 - name: Create files on remote
-  ansible.buildin.copy:
+  ansible.builtin.copy:
     dest: "/root/authelia-config/{{ item.file }}"
     content: "{{ item.content }}"
     mode: "0600"
