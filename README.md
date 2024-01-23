@@ -6,7 +6,7 @@ The role installs and configures Portainer for my server.
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+A list of the variables that need to be set can be seen below
 
 Example Playbook
 ----------------
@@ -60,9 +60,13 @@ Example Playbook
             - /root/cert-proxmox.crt:/root/cert-proxmox.crt:ro
             - /root/tbrouwer-cloudflare-origin.cert:/root/tbrouwer-cloudflare-origin.cert:ro
             - /root/tbrouwer-cloudflare-origin.key:/root/tbrouwer-cloudflare-origin.key:ro
-
+        
         portainer_dashy:
           description: ""
+
+        portainer_authelia_config_template_path: templates/authelia-config.yaml.j2
+        portainer_dashy_config_template_path: templates/dashy-conf.yaml.j2
+        portainer_traefik_dynamic_template_path: templates/traefik-dynamic.yaml.j2
 
       roles:
          - { role: tychobrouwer.portainer }

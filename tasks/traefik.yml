@@ -7,6 +7,18 @@
     owner: root
     group: root
 
+- name: Get other configs on remote
+  ansible.builtin.template:
+    src: templates/"{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: "0644"
+    owner: root
+    group: root
+  with_items:
+    - { src: "{{ portainer_authelia_config_template_path }}", dest: /root/authelia-config/configuration.yaml }
+    - { src: "{{ portainer_dashy_config_template_path }}",      dest: /root/dashy-conf.yaml }
+    - { src: "{{ portainer_traefik_dynamic_template_path }}", dest: /root/traefik-dynamic.yaml }
+
 # - name: Ensure traefik dynamic config is on remote
 #   ansible.builtin.template:
 #     src: traefik-dynamic.yaml.j2

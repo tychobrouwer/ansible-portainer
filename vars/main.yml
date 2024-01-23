@@ -8,3 +8,7 @@ portainer_traefik:
     - /var/run/docker.sock:/var/run/docker.sock
     - /root/traefik-static.yaml:/etc/traefik/static.yaml:ro
     - /root/traefik-dynamic.yaml:/etc/traefik/dynamic.yaml:ro
+
+portainer_authelia_config_template_path: authelia-config.yaml.j2
+portainer_dashy_config_template_path: dashy-conf.yaml.j2
+portainer_traefik_dynamic_template_path: traefik-dynamic.yaml.j2
