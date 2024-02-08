@@ -30,6 +30,7 @@ accessLog:
       names:
         x-request-id: keep
 
+{% if influxdb_enabled %}
 metrics:
   influxDB2:
     address: http://{{ ansible_default_ipv4.address | default(ansible_all_ipv4_addresses[0]) }}:8086
@@ -37,3 +38,4 @@ metrics:
     org: homelab
     bucket: traefik
     pushInterval: 10s
+{% endif %}
