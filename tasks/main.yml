@@ -14,6 +14,47 @@
       - gnupg
     state: present
 
+- name: Ensure templates are on remote
+  ansible.builtin.copy:
+    dest: /root/{{ item.name }}
+    content: "{{ item.content }}"
+    mode: "0644"
+    owner: root
+    group: root
+  with_items:
+    - { content: "{{ portainer_authelia_config_template }}", name: authelia-config.yaml }
+    - { content: "{{ portainer_dashy_config_template }}", name: dashy-conf.yaml }
+    - { content: "{{ portainer_traefik_dynamic_template }}", name: traefik-dynamic.yaml }
+
+- name: Get templates from remote
+  ansible.builtin.fetch:
+    src: /root/{{ item }}
+    dest: /tmp
+  with_items:
+    - authelia-config.yaml
+    - dashy-conf.yaml
+    - traefik-dynamic.yaml
+
+- name: Ensure authelia-config exists
+  ansible.builtin.file:
+    path: /root/authelia-config
+    state: directory
+    mode: "0755"
+    owner: root
+    group: root
+
+- name: Get other configs on remote
+  ansible.builtin.template:
+    src: /tmp/portainer/root/{{ item.name }}
+    dest: "{{ item.dest }}"
+    mode: "0644"
+    owner: root
+    group: root
+  with_items:
+    - { name: authelia-config.yaml, dest: /root/authelia-config/configuration.yaml }
+    - { name: dashy-conf.yaml, dest: /root/dashy-conf.yaml }
+    - { name: traefik-dynamic.yaml, dest: /root/traefik-dynamic.yaml }
+
 - name: Install Docker
   ansible.builtin.include_tasks: docker.yml
 
