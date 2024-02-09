@@ -61,7 +61,7 @@
     state: present
 
 - ansible.builtin.debug:
-  msg: "{{ default_volumes + portainer_traefik.additional_volumes }}"
+    msg: "{{ default_volumes + portainer_traefik.additional_volumes }}"
 
 - name: Ensure Traefik reverse proxy Docker container is running
   community.docker.docker_container:
