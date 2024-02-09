@@ -22,7 +22,7 @@
     mode: "0600"
     owner: root
     group: root
-  with_items: "{{ portainer_traefik.additional_certs }}"
+  with_items: "{{ portainer_traefik_additional_certs }}"
 
 # - name: Ensure proxmox certificate is on remote
 #   copy:
@@ -49,7 +49,7 @@
     state: present
 
 - ansible.builtin.debug:
-    msg: "{{ default_volumes + portainer_traefik.additional_volumes }}"
+    msg: "{{ default_volumes + portainer_traefik_additional_volumes }}"
 
 - name: Ensure Traefik reverse proxy Docker container is running
   community.docker.docker_container:
@@ -64,7 +64,7 @@
     restart_policy: unless-stopped
     networks:
       - name: web-secure
-    volumes: "{{ default_volumes + portainer_traefik.additional_volumes }}"
+    volumes: "{{ default_volumes + portainer_traefik_additional_volumes }}"
       # - /var/run/docker.sock:/var/run/docker.sock
       # - /root/traefik-static.yaml:/etc/traefik/static.yaml
       # - /root/traefik-dynamic.yaml:/etc/traefik/dynamic.yaml
