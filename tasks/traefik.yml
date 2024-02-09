@@ -7,17 +7,38 @@
     owner: root
     group: root
 
+- name: Ensure templates are on remote
+  ansible.builtin.copy:
+    dest: /root/{{ item.name }}
+    content: "{{ item.content }}"
+    mode: "0644"
+    owner: root
+    group: root
+  with_items:
+    - { content: "{{ portainer_authelia_config_template }}", name: authelia-config.yaml }
+    - { content: "{{ portainer_dashy_config_template }}", name: dashy-conf.yaml }
+    - { content: "{{ portainer_traefik_dynamic_template }}", name: traefik-dynamic.yaml }
+
+- name: Get templates from remote
+  ansible.builtin.fetch:
+    src: /root/{{ item }}
+    dest: tmp/{{ item }}
+  with_items:
+    - authelia-config.yaml
+    - dashy-conf.yaml
+    - traefik-dynamic.yaml
+
 - name: Get other configs on remote
   ansible.builtin.template:
-    src: templates/"{{ item.src }}"
+    src: /root/{{ item.name }}
     dest: "{{ item.dest }}"
     mode: "0644"
     owner: root
     group: root
   with_items:
-    - { src: "{{ portainer_authelia_config_template_path }}", dest: /root/authelia-config/configuration.yaml }
-    - { src: "{{ portainer_dashy_config_template_path }}", dest: /root/dashy-conf.yaml }
-    - { src: "{{ portainer_traefik_dynamic_template_path }}", dest: /root/traefik-dynamic.yaml }
+    - { name: authelia-config.yaml, dest: /root/authelia-config/configuration.yaml }
+    - { name: dashy-conf.yaml, dest: /root/dashy-conf.yaml }
+    - { name: traefik-dynamic.yaml, dest: /root/traefik-dynamic.yaml }
 
 # - name: Ensure traefik dynamic config is on remote
 #   ansible.builtin.template:
