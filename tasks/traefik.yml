@@ -49,7 +49,7 @@
     state: present
 
 - ansible.builtin.debug:
-    msg: "{{ default_volumes + portainer_traefik_additional_volumes }}"
+    msg: "{{ portainer_traefik_default_volumes + portainer_traefik_additional_volumes }}"
 
 - name: Ensure Traefik reverse proxy Docker container is running
   community.docker.docker_container:
@@ -64,7 +64,7 @@
     restart_policy: unless-stopped
     networks:
       - name: web-secure
-    volumes: "{{ default_volumes + portainer_traefik_additional_volumes }}"
+    volumes: "{{ portainer_traefik_default_volumes + portainer_traefik_additional_volumes }}"
       # - /var/run/docker.sock:/var/run/docker.sock
       # - /root/traefik-static.yaml:/etc/traefik/static.yaml
       # - /root/traefik-dynamic.yaml:/etc/traefik/dynamic.yaml
