@@ -22,7 +22,7 @@
 - name: Get templates from remote
   ansible.builtin.fetch:
     src: /root/{{ item }}
-    dest: tmp/{{ item }}
+    dest: /tmp/{{ item }}
   with_items:
     - authelia-config.yaml
     - dashy-conf.yaml
@@ -30,7 +30,7 @@
 
 - name: Get other configs on remote
   ansible.builtin.template:
-    src: /root/{{ item.name }}
+    src: /tmp/{{ item.name }}
     dest: "{{ item.dest }}"
     mode: "0644"
     owner: root
