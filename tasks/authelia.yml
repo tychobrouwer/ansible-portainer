@@ -8,8 +8,7 @@
 
 - name: Set password hash
   ansible.builtin.set_fact:
-    portainer_authelia:
-      user_password_hash: "{{ password_hash.stdout | regex_replace('Digest: ', '') }}"
+    portainer_authelia_password_hash: "{{ password_hash.stdout | regex_replace('Digest: ', '') }}"
 
 - name: Ensure authelia user database is on remote
   ansible.builtin.template:
