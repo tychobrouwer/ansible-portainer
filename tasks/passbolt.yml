@@ -72,8 +72,8 @@
       -f {{ portainer_passbolt.user_name }}
       -l {{ portainer_passbolt.user_surname }}
       -r admin
-  register: passbolt_result
-  changed_when: "'Username: The username is already in use' not in passbolt_result.stdout"
+  register: passbolt_result_admin
+  changed_when: "'Username: The username is already in use' not in passbolt_result_admin.stdout"
   failed_when: false
 
 - name: Ensure gpg fingerprint is imported
@@ -85,11 +85,11 @@
       --list-keys ${PASSBOLT_KEY_EMAIL:-passbolt@{{ portainer_root_domain }}} |
       grep -Ev "^(pub|sub|uid|^$)" |
       tr -d ' ')"
-  register: passbolt_result
+  register: passbolt_result_fingerprint
   changed_when: false
   failed_when: false
 
 - name: Print result passbolt admin
   ansible.builtin.debug:
     msg: "{{ passbolt_result.stdout }}"
-  when: "'Username: The username is already in use' not in passbolt_result.stdout"
+  when: "'Username: The username is already in use' not in passbolt_result_fingerprint.stdout"

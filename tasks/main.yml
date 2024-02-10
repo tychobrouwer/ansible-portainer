@@ -62,6 +62,10 @@
   ansible.builtin.include_tasks: traefik.yml
   when: traefik_enabled
 
+- name: Install Authelia container
+  ansible.builtin.include_tasks: authelia.yml
+  when: authelia_enabled
+
 - name: Install Portainer container
   ansible.builtin.include_tasks: portainer.yml
   when: portainer_enabled
@@ -89,7 +93,3 @@
 - name: Install Watchtower container
   ansible.builtin.include_tasks: watchtower.yml
   when: watchtower_enabled
-
-- name: Install Authelia container
-  ansible.builtin.include_tasks: authelia.yml
-  when: authelia_enabled
