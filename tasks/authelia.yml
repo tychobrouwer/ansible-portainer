@@ -1,7 +1,7 @@
 ---
 - name: Generate password hash
   ansible.builtin.command: >
-    docker run authelia/authelia:latest --name temp
+    docker run --name temp authelia/authelia:latest
     authelia crypto hash generate argon2 --password '{{ portainer_authelia.user_password }}'
   register: password_hash
   changed_when: false
