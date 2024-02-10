@@ -2,9 +2,14 @@
 - name: Generate password hash
   ansible.builtin.command: >
     docker run authelia/authelia:latest
-    authelia crypto hash generate argon2 --password '{{ portainer_authelia.user_password }}'
+    authelia crypto hash generate argon2 --name temp --password '{{ portainer_authelia.user_password }}'
   register: password_hash
   changed_when: false
+
+- name: Delete container
+  community.docker.docker_container:
+    name: temp
+    state: absent
 
 - name: Set password hash
   ansible.builtin.set_fact:
