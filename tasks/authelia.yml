@@ -10,6 +10,7 @@
   community.docker.docker_container:
     name: temp
     state: absent
+    keep_volumes: false
   changed_when: false
 
 - name: Set password hash
