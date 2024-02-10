@@ -91,5 +91,5 @@
 
 - name: Print result passbolt admin
   ansible.builtin.debug:
-    msg: "{{ passbolt_result.stdout }}"
+    msg: "{{ passbolt_result_fingerprint.stdout }}"
   when: "'Username: The username is already in use' not in passbolt_result_fingerprint.stdout"
