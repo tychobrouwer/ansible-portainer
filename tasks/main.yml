@@ -45,7 +45,7 @@
 
 - name: Get other configs on remote
   ansible.builtin.template:
-    src: /tmp/portainer/root/{{ item.name }}
+    src: /tmp/{{ inventory_hostname }}/root/{{ item.name }}
     dest: "{{ item.dest }}"
     mode: "0644"
     owner: root
