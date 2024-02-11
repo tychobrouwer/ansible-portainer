@@ -58,38 +58,38 @@
 - name: Install Docker
   ansible.builtin.include_tasks: docker.yml
 
-- name: Install Traefik container
-  ansible.builtin.include_tasks: traefik.yml
-  when: traefik_enabled
+# - name: Install Traefik container
+#   ansible.builtin.include_tasks: traefik.yml
+#   when: traefik_enabled
 
 - name: Install Authelia container
   ansible.builtin.include_tasks: authelia.yml
   when: authelia_enabled
 
-- name: Install Portainer container
-  ansible.builtin.include_tasks: portainer.yml
-  when: portainer_enabled
+# - name: Install Portainer container
+#   ansible.builtin.include_tasks: portainer.yml
+#   when: portainer_enabled
 
-- name: Install Dashy container
-  ansible.builtin.include_tasks: dashy.yml
-  when: dashy_enabled
+# - name: Install Dashy container
+#   ansible.builtin.include_tasks: dashy.yml
+#   when: dashy_enabled
 
-- name: Install Cloudflare DDNS container
-  ansible.builtin.include_tasks: cloudflare-ddns.yml
-  when: cloudflare_ddns_enabled
+# - name: Install Cloudflare DDNS container
+#   ansible.builtin.include_tasks: cloudflare-ddns.yml
+#   when: cloudflare_ddns_enabled
 
-- name: Install InfluxDB container
-  ansible.builtin.include_tasks: influxdb.yml
-  when: influxdb_enabled
+# - name: Install InfluxDB container
+#   ansible.builtin.include_tasks: influxdb.yml
+#   when: influxdb_enabled
 
-- name: Install Grafana container
-  ansible.builtin.include_tasks: grafana.yml
-  when: grafana_enabled
+# - name: Install Grafana container
+#   ansible.builtin.include_tasks: grafana.yml
+#   when: grafana_enabled
 
-- name: Install Passbolt container
-  ansible.builtin.include_tasks: passbolt.yml
-  when: passbolt_enabled
+# - name: Install Passbolt container
+#   ansible.builtin.include_tasks: passbolt.yml
+#   when: passbolt_enabled
 
-- name: Install Watchtower container
-  ansible.builtin.include_tasks: watchtower.yml
-  when: watchtower_enabled
+# - name: Install Watchtower container
+#   ansible.builtin.include_tasks: watchtower.yml
+#   when: watchtower_enabled

@@ -37,7 +37,7 @@
 
 - name: Set password hash
   ansible.builtin.set_fact:
-    portainer_authelia_password_hash: "{{ users_database_file.content | regex_search('password: ') | regex_replace('password: \"', '') }}"
+    portainer_authelia_password_hash: "{{ users_database_file.content | regex_search('password: ') }}"
   when: not password_file.changed
 
 - name: Ensure authelia user database is on remote
