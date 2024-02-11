@@ -29,15 +29,25 @@
     portainer_authelia_password_hash: "{{ password_hash.stdout | regex_replace('Digest: ', '') }}"
   when: password_file.changed
 
-- name: Get password hash
+- name: Save password hash
+  ansible.builtin.copy:
+    dest: /root/authelia-config/password-hash
+    content: "{{ portainer_authelia_password_hash }}"
+    mode: "0600"
+    owner: root
+    group: root
+  register: password_hash_file
+  when: password_file.changed
+
+- name: Get password hash from remote
   ansible.builtin.slurp:
-    src: /root/authelia-config/users_database.yaml
+    src: /root/authelia-config/password-hash
+  register: password_hash_file
   when: not password_file.changed
-  register: users_database_file
 
 - name: Set password hash
   ansible.builtin.set_fact:
-    portainer_authelia_password_hash: "{{ users_database_file.content | b64decode | regex_search('password_hash: \"(.*)\"') | regex_replace('password_hash: ', '') | regex_replace(' ', '') }}"
+    portainer_authelia_password_hash: "{{ password_hash_file.content | b64decode }}"
   when: not password_file.changed
 
 - name: Ensure authelia user database is on remote
