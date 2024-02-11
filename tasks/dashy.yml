@@ -1,10 +1,4 @@
 ---
-# - name: Ensure dashy config is on remote
-#   ansible.builtin.template:
-#     src: dashy-conf.yaml.j2
-#     dest: /root/dashy-conf.yaml
-#     mode: "0644"
-
 - name: Ensure Dashy Docker container is running
   community.docker.docker_container:
     name: dashy

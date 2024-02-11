@@ -1,95 +1,95 @@
 ---
 # tasks file for ansible-portainer
-# - name: Update APT cache
-#   ansible.builtin.apt:
-#     update_cache: true
-#     cache_valid_time: 3600
-#   when: ansible_os_family == "Debian"
+- name: Update APT cache
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+  when: ansible_os_family == "Debian"
 
-# - name: Ensure required packages are installed
-#   ansible.builtin.package:
-#     name:
-#       - ca-certificates
-#       - curl
-#       - gnupg
-#     state: present
+- name: Ensure required packages are installed
+  ansible.builtin.package:
+    name:
+      - ca-certificates
+      - curl
+      - gnupg
+    state: present
 
-# - name: Ensure templates are on remote
-#   ansible.builtin.copy:
-#     dest: /root/{{ item.name }}
-#     content: "{{ item.content }}"
-#     mode: "0644"
-#     owner: root
-#     group: root
-#   with_items:
-#     - { content: "{{ portainer_authelia_config_template }}", name: authelia-config-template.yaml }
-#     - { content: "{{ portainer_dashy_config_template }}", name: dashy-conf-template.yaml }
-#     - { content: "{{ portainer_traefik_dynamic_template }}", name: traefik-dynamic-template.yaml }
+- name: Ensure templates are on remote
+  ansible.builtin.copy:
+    dest: /root/{{ item.name }}
+    content: "{{ item.content }}"
+    mode: "0644"
+    owner: root
+    group: root
+  with_items:
+    - { content: "{{ portainer_authelia_config_template }}", name: authelia-config-template.yaml }
+    - { content: "{{ portainer_dashy_config_template }}", name: dashy-conf-template.yaml }
+    - { content: "{{ portainer_traefik_dynamic_template }}", name: traefik-dynamic-template.yaml }
 
-# - name: Get templates from remote
-#   ansible.builtin.fetch:
-#     src: /root/{{ item }}
-#     dest: /tmp
-#   with_items:
-#     - authelia-config-template.yaml
-#     - dashy-conf-template.yaml
-#     - traefik-dynamic-template.yaml
+- name: Get templates from remote
+  ansible.builtin.fetch:
+    src: /root/{{ item }}
+    dest: /tmp
+  with_items:
+    - authelia-config-template.yaml
+    - dashy-conf-template.yaml
+    - traefik-dynamic-template.yaml
 
-# - name: Ensure authelia-config exists
-#   ansible.builtin.file:
-#     path: /root/authelia-config
-#     state: directory
-#     mode: "0755"
-#     owner: root
-#     group: root
+- name: Ensure authelia-config exists
+  ansible.builtin.file:
+    path: /root/authelia-config
+    state: directory
+    mode: "0755"
+    owner: root
+    group: root
 
-# - name: Get other configs on remote
-#   ansible.builtin.template:
-#     src: /tmp/{{ inventory_hostname }}/root/{{ item.name }}
-#     dest: "{{ item.dest }}"
-#     mode: "0644"
-#     owner: root
-#     group: root
-#   with_items:
-#     - { name: authelia-config-template.yaml, dest: /root/authelia-config/configuration.yaml }
-#     - { name: dashy-conf-template.yaml, dest: /root/dashy-conf.yaml }
-#     - { name: traefik-dynamic-template.yaml, dest: /root/traefik-dynamic.yaml }
+- name: Get other configs on remote
+  ansible.builtin.template:
+    src: /tmp/{{ inventory_hostname }}/root/{{ item.name }}
+    dest: "{{ item.dest }}"
+    mode: "0644"
+    owner: root
+    group: root
+  with_items:
+    - { name: authelia-config-template.yaml, dest: /root/authelia-config/configuration.yaml }
+    - { name: dashy-conf-template.yaml, dest: /root/dashy-conf.yaml }
+    - { name: traefik-dynamic-template.yaml, dest: /root/traefik-dynamic.yaml }
 
-# - name: Install Docker
-#   ansible.builtin.include_tasks: docker.yml
+- name: Install Docker
+  ansible.builtin.include_tasks: docker.yml
 
-# - name: Install Traefik container
-#   ansible.builtin.include_tasks: traefik.yml
-#   when: traefik_enabled
+- name: Install Traefik container
+  ansible.builtin.include_tasks: traefik.yml
+  when: traefik_enabled
 
 - name: Install Authelia container
   ansible.builtin.include_tasks: authelia.yml
   when: authelia_enabled
 
-# - name: Install Portainer container
-#   ansible.builtin.include_tasks: portainer.yml
-#   when: portainer_enabled
+- name: Install Portainer container
+  ansible.builtin.include_tasks: portainer.yml
+  when: portainer_enabled
 
-# - name: Install Dashy container
-#   ansible.builtin.include_tasks: dashy.yml
-#   when: dashy_enabled
+- name: Install Dashy container
+  ansible.builtin.include_tasks: dashy.yml
+  when: dashy_enabled
 
-# - name: Install Cloudflare DDNS container
-#   ansible.builtin.include_tasks: cloudflare-ddns.yml
-#   when: cloudflare_ddns_enabled
+- name: Install Cloudflare DDNS container
+  ansible.builtin.include_tasks: cloudflare-ddns.yml
+  when: cloudflare_ddns_enabled
 
-# - name: Install InfluxDB container
-#   ansible.builtin.include_tasks: influxdb.yml
-#   when: influxdb_enabled
+- name: Install InfluxDB container
+  ansible.builtin.include_tasks: influxdb.yml
+  when: influxdb_enabled
 
-# - name: Install Grafana container
-#   ansible.builtin.include_tasks: grafana.yml
-#   when: grafana_enabled
+- name: Install Grafana container
+  ansible.builtin.include_tasks: grafana.yml
+  when: grafana_enabled
 
-# - name: Install Passbolt container
-#   ansible.builtin.include_tasks: passbolt.yml
-#   when: passbolt_enabled
+- name: Install Passbolt container
+  ansible.builtin.include_tasks: passbolt.yml
+  when: passbolt_enabled
 
-# - name: Install Watchtower container
-#   ansible.builtin.include_tasks: watchtower.yml
-#   when: watchtower_enabled
+- name: Install Watchtower container
+  ansible.builtin.include_tasks: watchtower.yml
+  when: watchtower_enabled
