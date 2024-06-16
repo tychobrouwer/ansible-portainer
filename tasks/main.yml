@@ -26,10 +26,11 @@
     - { content: "{{ portainer_dashy_config_template }}", name: dashy-conf-template.yaml }
     - { content: "{{ portainer_traefik_dynamic_template }}", name: traefik-dynamic-template.yaml }
 
-- name: Get templates from remote
+- name: Get templates from remote to controller in predictable location
   ansible.builtin.fetch:
     src: /root/{{ item }}
     dest: /tmp
+  changed_when: false
   with_items:
     - authelia-config-template.yaml
     - dashy-conf-template.yaml
@@ -43,7 +44,7 @@
     owner: root
     group: root
 
-- name: Get other configs on remote
+- name: Create configs from templates on controller
   ansible.builtin.template:
     src: /tmp/{{ inventory_hostname }}/root/{{ item.name }}
     dest: "{{ item.dest }}"
