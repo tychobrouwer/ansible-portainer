@@ -18,7 +18,7 @@
       SECRET_KEY: "{{ portainer_tandoor.secret_key }}"
       DB_ENGINE: django.db.backends.postgresql
       POSTGRES_HOST: db_recipes
-      POSTGRES_PORT: 5432
+      POSTGRES_PORT: "5432"
       POSTGRES_USER: djangodb
       POSTGRES_PASSWORD: "{{ portainer_tandoor.postgres_password }}"
       POSTGRES_DB: djangodb
