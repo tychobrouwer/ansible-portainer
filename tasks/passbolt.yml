@@ -58,7 +58,6 @@
       traefik.http.routers.passbolt.tls: "true"
     ports:
       - 4080:80
-
     networks:
       - name: web-secure
 

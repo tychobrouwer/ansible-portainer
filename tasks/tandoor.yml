@@ -1,4 +1,24 @@
 ---
+- name: Ensure Tandoor database Docker volume is present
+  community.docker.docker_volume:
+    name: database_volume_postgres
+
+- name: Ensure Tandoor database container is running
+  community.docker.docker_container:
+    name: db_recipes
+    image: postgres:16-alpine
+    labels:
+      watchtower.enable: "false"
+    env:
+      POSTGRES_USER: djangodb
+      POSTGRES_PASSWORD: "{{ portainer_tandoor.postgres_password }}"
+      POSTGRES_DB: djangodb
+    volumes:
+      - database_volume_postgres:/var/lib/postgresql/data
+    restart_policy: unless-stopped
+    ports:
+      - 5432:5432
+
 - name: Ensure Tandoor static volume is present
   community.docker.docker_volume:
     name: tandoor_static
@@ -29,7 +49,7 @@
       traefik.http.routers.tandoor.service: tandoor
       traefik.http.routers.tandoor.tls: "true"
       traefik.http.routers.tandoor.middlewares: authelia@file
-      traefik.http.services.tandoor.loadbalancer.server.port: "8000"
+      traefik.http.services.tandoor.loadbalancer.server.port: "8080"
     restart_policy: unless-stopped
     networks:
       - name: web-secure
