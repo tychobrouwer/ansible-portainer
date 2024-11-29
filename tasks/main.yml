@@ -94,3 +94,7 @@
 - name: Install Watchtower container
   ansible.builtin.include_tasks: watchtower.yml
   when: watchtower_enabled
+
+- name: Install Tandoor container
+  ansible.builtin.include_tasks: tandoor.yml
+  when: tandoor_enabled

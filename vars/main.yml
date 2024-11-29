@@ -17,3 +17,4 @@ grafana_enabled: true
 passbolt_enabled: true
 watchtower_enabled: true
 authelia_enabled: true
+tandoor_enabled: true

@@ -1,0 +1,39 @@
+---
+- name: Ensure Tandoor static volume is present
+  community.docker.docker_volume:
+    name: tandoor_static
+
+- name: Ensure Tandoor media volume is present
+  community.docker.docker_volume:
+    name: tandoor_media
+
+- name: Ensure Tandoor Docker container is running
+  community.docker.docker_container:
+    name: tandoor
+    image: vabene1111/recipes
+    state: started
+    ports:
+      - 9080:8080
+    env:
+      SECRET_KEY: "{{ portainer_tandoor.secret_key }}"
+      DB_ENGINE: django.db.backends.postgresql
+      POSTGRES_HOST: db_recipes
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: djangodb
+      POSTGRES_PASSWORD: "{{ portainer_tandoor.postgres_password }}"
+      POSTGRES_DB: djangodb
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.tandoor.rule: Host(`tandoor.{{ portainer_root_domain }}`)
+      traefik.http.routers.tandoor.entrypoints: web-secure
+      traefik.http.routers.tandoor.service: tandoor
+      traefik.http.routers.tandoor.tls: "true"
+      traefik.http.routers.tandoor.middlewares: authelia@file
+      traefik.http.services.tandoor.loadbalancer.server.port: "8000"
+    restart_policy: unless-stopped
+    networks:
+      - name: web-secure
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - tandoor_static:/opt/recipes/staticfiles
+      - tandoor_media:/opt/recipes/mediafiles
