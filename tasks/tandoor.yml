@@ -5,7 +5,7 @@
 
 - name: Ensure Tandoor database container is running
   community.docker.docker_container:
-    name: db_recipes
+    name: postgres-tandoor
     image: postgres:16-alpine
     labels:
       watchtower.enable: "false"
