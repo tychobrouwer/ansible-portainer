@@ -1,12 +1,4 @@
 ---
-- name: Ensure traefik static config is on remote
-  ansible.builtin.template:
-    src: traefik-static.yaml.j2
-    dest: /root/traefik-static.yaml
-    mode: "0600"
-    owner: root
-    group: root
-
 - name: Ensure additional certificates are on remote
   ansible.builtin.copy:
     dest: /root/{{ item.file }}
@@ -32,6 +24,7 @@
     ports:
       - 443:443
       - 8080:8080
+      - 51820:51820
     restart_policy: unless-stopped
     networks:
       - name: web-secure

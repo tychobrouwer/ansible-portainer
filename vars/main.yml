@@ -7,6 +7,7 @@ portainer_traefik_default_volumes:
   - /var/run/docker.sock:/var/run/docker.sock
   - /root/traefik-static.yaml:/etc/traefik/static.yaml:ro
   - /root/traefik-dynamic.yaml:/etc/traefik/dynamic.yaml:ro
+  - /root/traefik-static.yaml:/etc/traefik/static.yaml:ro
 
 traefik_enabled: true
 portainer_enabled: true

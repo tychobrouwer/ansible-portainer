@@ -25,6 +25,7 @@
     - { content: "{{ portainer_authelia_config_template }}", name: authelia-config-template.yaml }
     - { content: "{{ portainer_dashy_config_template }}", name: dashy-conf-template.yaml }
     - { content: "{{ portainer_traefik_dynamic_template }}", name: traefik-dynamic-template.yaml }
+    - { content: "{{ portainer_traefik_static_template }}", name: traefik-static-template.yaml }
 
 - name: Get templates from remote to controller in predictable location
   ansible.builtin.fetch:
@@ -35,6 +36,7 @@
     - authelia-config-template.yaml
     - dashy-conf-template.yaml
     - traefik-dynamic-template.yaml
+    - traefik-static-template.yaml
 
 - name: Ensure authelia-config exists
   ansible.builtin.file:
@@ -55,6 +57,7 @@
     - { name: authelia-config-template.yaml, dest: /root/authelia-config/configuration.yaml }
     - { name: dashy-conf-template.yaml, dest: /root/dashy-conf.yaml }
     - { name: traefik-dynamic-template.yaml, dest: /root/traefik-dynamic.yaml }
+    - { name: traefik-static-template.yaml, dest: /root/traefik-static.yaml }
 
 - name: Install Docker
   ansible.builtin.include_tasks: docker.yml
