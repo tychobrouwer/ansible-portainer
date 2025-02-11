@@ -24,7 +24,6 @@
     ports:
       - 443:443
       - 8080:8080
-      - 51820:51820
     restart_policy: unless-stopped
     networks:
       - name: web-secure
