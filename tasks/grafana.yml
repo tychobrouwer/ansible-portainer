@@ -17,13 +17,13 @@
     image: grafana/grafana-enterprise:latest
     ports:
       - 3000:3000
-    labels:
-      traefik.enable: "true"
-      traefik.http.routers.grafana.rule: Host(`grafana.{{ portainer_root_domain }}`)
-      traefik.http.routers.grafana.entrypoints: web-secure
-      traefik.http.routers.grafana.tls: "true"
-      traefik.http.routers.grafana.middlewares: authelia@file
-      traefik.http.services.grafana.loadbalancer.server.port: "3000"
+    # labels:
+    #   traefik.enable: "true"
+    #   traefik.http.routers.grafana.rule: Host(`grafana.{{ portainer_root_domain }}`)
+    #   traefik.http.routers.grafana.entrypoints: web-secure
+    #   traefik.http.routers.grafana.tls: "true"
+    #   traefik.http.routers.grafana.middlewares: authelia@file
+    #   traefik.http.services.grafana.loadbalancer.server.port: "3000"
     networks:
       - name: web-secure
     volumes:
