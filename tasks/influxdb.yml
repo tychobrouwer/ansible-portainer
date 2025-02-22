@@ -27,3 +27,4 @@
     restart_policy: unless-stopped
     networks:
       - name: web-secure
+    cpus: "{{ portainer_cpus }}"

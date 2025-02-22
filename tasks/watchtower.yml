@@ -10,3 +10,4 @@
     env:
       WATCHTOWER_CLEANUP: "true"
     restart_policy: unless-stopped
+    cpus: "{{ portainer_cpus }}"

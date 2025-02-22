@@ -8,3 +8,4 @@
       ZONE: "{{ portainer_root_domain }}"
       PROXIED: "true"
     restart_policy: unless-stopped
+    cpus: "{{ portainer_cpus }}"

@@ -96,3 +96,4 @@
       - name: web-secure
     healthcheck:
       test: [NONE]
+    cpus: "{{ portainer_cpus }}"

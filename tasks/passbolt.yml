@@ -19,6 +19,7 @@
     restart_policy: unless-stopped
     ports:
       - 3306:3306
+    cpus: "{{ portainer_cpus }}"
 
 - name: Ensure Passbolt gpg Docker volume is present
   community.docker.docker_volume:
@@ -60,6 +61,7 @@
       - 4080:80
     networks:
       - name: web-secure
+    cpus: "{{ portainer_cpus }}"
 
 - name: Ensure passbolt admin is present
   community.docker.docker_container_exec:

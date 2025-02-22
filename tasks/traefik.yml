@@ -28,3 +28,4 @@
     networks:
       - name: web-secure
     volumes: "{{ portainer_traefik_default_volumes + portainer_traefik_additional_volumes }}"
+    cpus: "{{ portainer_cpus }}"

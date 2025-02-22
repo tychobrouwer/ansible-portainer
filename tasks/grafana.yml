@@ -30,3 +30,4 @@
       - /root/grafana.ini:/etc/grafana/grafana.ini
       - grafana_data:/var/lib/grafana
     restart_policy: unless-stopped
+    cpus: "{{ portainer_cpus }}"

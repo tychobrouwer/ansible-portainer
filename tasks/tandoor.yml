@@ -57,3 +57,4 @@
       - /var/run/docker.sock:/var/run/docker.sock
       - tandoor_static:/opt/recipes/staticfiles
       - tandoor_media:/opt/recipes/mediafiles
+    cpus: "{{ portainer_cpus }}"

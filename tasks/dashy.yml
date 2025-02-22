@@ -16,3 +16,4 @@
     volumes:
       - /root/dashy-conf.yaml:/app/public/conf.yml
     restart_policy: unless-stopped
+    cpus: "{{ portainer_cpus }}"
