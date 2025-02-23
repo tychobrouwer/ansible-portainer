@@ -3,11 +3,6 @@
   community.docker.docker_container:
     name: dashy
     image: tychobrouwer/dashy-tychobrouwer
-    # labels:
-    #   traefik.enable: "true"
-    #   traefik.http.routers.dashy.rule: Host(`dash.{{ portainer_root_domain }}`)
-    #   traefik.http.routers.dashy.entrypoints: web-secure
-    #   traefik.http.routers.dashy.tls: "true"
     state: started
     ports:
       - "1080:80"

@@ -3,12 +3,6 @@
 portainer_docker_ce_deb_repo: deb https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable
 portainer_docker_ce_deb_gpg: https://download.docker.com/linux/debian/gpg
 
-portainer_traefik_default_volumes:
-  - /var/run/docker.sock:/var/run/docker.sock
-  - /root/traefik-static.yaml:/etc/traefik/static.yaml:ro
-  - /root/traefik-dynamic.yaml:/etc/traefik/dynamic.yaml:ro
-
-traefik_enabled: true
 portainer_enabled: true
 dashy_enabled: true
 cloudflare_ddns_enabled: true

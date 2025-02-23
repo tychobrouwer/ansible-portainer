@@ -32,16 +32,9 @@
   loop:
     - { src: "{{ portainer_authelia_config_template }}", dest: /root/authelia-config/configuration.yaml }
     - { src: "{{ portainer_dashy_config_template }}", dest: /root/dashy-conf.yaml }
-    - { src: "{{ portainer_traefik_dynamic_template }}", dest: /root/traefik-dynamic.yaml }
-    - { src: "{{ portainer_traefik_static_template }}", dest: /root/traefik-static.yaml }
-  notify: restart traefik
 
 - name: Install Docker
   ansible.builtin.include_tasks: docker.yml
-
-- name: Install Traefik container
-  ansible.builtin.include_tasks: traefik.yml
-  when: traefik_enabled
 
 - name: Install Authelia container
   ansible.builtin.include_tasks: authelia.yml

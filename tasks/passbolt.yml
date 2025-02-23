@@ -52,11 +52,6 @@
       - gpg_volume:/etc/passbolt/gpg
       - jwt_volume:/etc/passbolt/jwt
     restart_policy: unless-stopped
-    # labels:
-    #   traefik.enable: "true"
-    #   traefik.http.routers.passbolt.rule: Host(`passbolt.{{ portainer_root_domain }}`)
-    #   traefik.http.routers.passbolt.entrypoints: web-secure
-    #   traefik.http.routers.passbolt.tls: "true"
     ports:
       - 4080:80
     networks:
