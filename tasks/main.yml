@@ -14,30 +14,6 @@
       - gnupg
     state: present
 
-- name: Ensure templates are on remote
-  ansible.builtin.copy:
-    dest: /root/{{ item.name }}
-    content: "{{ item.content }}"
-    mode: "0644"
-    owner: root
-    group: root
-  with_items:
-    - { content: "{{ portainer_authelia_config_template }}", name: authelia-config-template.yaml }
-    - { content: "{{ portainer_dashy_config_template }}", name: dashy-conf-template.yaml }
-    - { content: "{{ portainer_traefik_dynamic_template }}", name: traefik-dynamic-template.yaml }
-    - { content: "{{ portainer_traefik_static_template }}", name: traefik-static-template.yaml }
-
-- name: Get templates from remote to controller in predictable location
-  ansible.builtin.fetch:
-    src: /root/{{ item }}
-    dest: /tmp
-  changed_when: false
-  with_items:
-    - authelia-config-template.yaml
-    - dashy-conf-template.yaml
-    - traefik-dynamic-template.yaml
-    - traefik-static-template.yaml
-
 - name: Ensure authelia-config exists
   ansible.builtin.file:
     path: /root/authelia-config
@@ -46,18 +22,19 @@
     owner: root
     group: root
 
-- name: Create configs from templates on controller
+- name: Ensure templates are deployed on remote
   ansible.builtin.template:
-    src: /tmp/{{ inventory_hostname }}/root/{{ item.name }}
+    src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     mode: "0644"
     owner: root
     group: root
-  with_items:
-    - { name: authelia-config-template.yaml, dest: /root/authelia-config/configuration.yaml }
-    - { name: dashy-conf-template.yaml, dest: /root/dashy-conf.yaml }
-    - { name: traefik-dynamic-template.yaml, dest: /root/traefik-dynamic.yaml }
-    - { name: traefik-static-template.yaml, dest: /root/traefik-static.yaml }
+  loop:
+    - { src: "{{ portainer_authelia_config_template }}", dest: /root/authelia-config/configuration.yaml }
+    - { src: "{{ portainer_dashy_config_template }}", dest: /root/dashy-conf.yaml }
+    - { src: "{{ portainer_traefik_dynamic_template }}", dest: /root/traefik-dynamic.yaml }
+    - { src: "{{ portainer_traefik_static_template }}", dest: /root/traefik-static.yaml }
+  notify: restart traefik
 
 - name: Install Docker
   ansible.builtin.include_tasks: docker.yml
