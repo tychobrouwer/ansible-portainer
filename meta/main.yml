@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  role_name: portainer
+  role_name: docker
   namespace: tychobrouwer
   author: Tycho Brouwer
   description: Install and configure Portainer
